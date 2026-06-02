@@ -1,11 +1,11 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import appointments, calls, dashboard
+from app.api.routes import appointments, auth, dashboard, sessions
 from app.core.config import get_settings
 from app.core.database import close_mongo_connection, connect_to_mongo
 from app.core.logger import logger, setup_logging
-from app.websocket import realtime_stream, twilio_stream
+from app.websocket import session_stream
 
 
 @asynccontextmanager
@@ -30,11 +30,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(calls.router)
+app.include_router(auth.router)
+app.include_router(sessions.router)
 app.include_router(appointments.router)
 app.include_router(dashboard.router)
-app.include_router(twilio_stream.router)
-app.include_router(realtime_stream.router)
+app.include_router(session_stream.router)
 
 
 @app.get("/health")

@@ -9,7 +9,6 @@ AppointmentStatus = Literal["scheduled", "confirmed", "rescheduled", "cancelled"
 class AppointmentModel(BaseModel):
     """Stored Mongo shape for a clinic appointment."""
     patient_name: str
-    phone_number: str
     doctor_name: str
     appointment_date: str
     appointment_time: str

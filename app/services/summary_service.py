@@ -7,7 +7,7 @@ class SummaryService:
         self.openai_service = openai_service
 
     async def summarize(self, transcript: list[dict]) -> dict:
-        """Normalize model output into the fields stored on a completed call."""
+        """Normalize model output into the fields stored on a completed session."""
         summary = await self.openai_service.summarize_call(transcript)
         return {
             "summary": summary.get("summary", "Summary unavailable."),

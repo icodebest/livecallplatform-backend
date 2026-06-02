@@ -34,10 +34,12 @@ def get_db() -> AsyncIOMotorDatabase:
 
 
 async def ensure_indexes() -> None:
-    """Create common lookup indexes for appointment, call, and dashboard queries."""
+    """Create common lookup indexes for appointment, session, and dashboard queries."""
     if mongo.db is None:
         return
-    await mongo.db.appointments.create_index("phone_number")
     await mongo.db.appointments.create_index("status")
+    await mongo.db.appointments.create_index("user_id")
     await mongo.db.calls.create_index("created_at")
     await mongo.db.calls.create_index("system_type")
+    await mongo.db.calls.create_index("user_id")
+    await mongo.db.users.create_index("email", unique=True)

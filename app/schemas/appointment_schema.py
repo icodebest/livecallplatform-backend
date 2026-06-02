@@ -5,7 +5,6 @@ from pydantic import BaseModel
 class AppointmentCreate(BaseModel):
     """Fields needed to create a new appointment."""
     patient_name: str
-    phone_number: str
     doctor_name: str
     appointment_date: str
     appointment_time: str
@@ -15,7 +14,6 @@ class AppointmentCreate(BaseModel):
 class AppointmentUpdate(BaseModel):
     """Optional fields allowed when editing an appointment."""
     patient_name: str | None = None
-    phone_number: str | None = None
     doctor_name: str | None = None
     appointment_date: str | None = None
     appointment_time: str | None = None

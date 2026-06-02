@@ -1,6 +1,6 @@
 import json
 import time
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, BadRequestError
 from app.core.config import Settings
 from app.services.conversation_service import SYSTEM_PROMPT
 
@@ -11,16 +11,21 @@ class OpenAIService:
         self.settings = settings
         self.client = AsyncOpenAI(api_key=settings.openai_api_key) if settings.openai_api_key else None
 
-    async def transcribe_audio(self, audio_bytes: bytes) -> str:
+    async def transcribe_audio(self, audio_bytes: bytes, mime_type: str = "audio/webm") -> str:
         """Turn patient audio into text for the modular voice pipeline."""
         if not self.client:
             return ""
-        # Production note: convert Twilio mulaw/8k audio into a supported input format before this call.
-        result = await self.client.audio.transcriptions.create(
-            model="gpt-4o-mini-transcribe",
-            file=("speech.wav", audio_bytes, "audio/wav"),
-        )
-        return result.text
+        if len(audio_bytes) < 2_000:
+            return ""
+        extension = "webm" if "webm" in mime_type else "wav"
+        try:
+            result = await self.client.audio.transcriptions.create(
+                model="gpt-4o-mini-transcribe",
+                file=(f"speech.{extension}", audio_bytes, mime_type),
+            )
+            return result.text
+        except BadRequestError:
+            return ""
 
     async def generate_reply(self, context: str, transcript: list[dict]) -> tuple[str, int]:
         """Ask the chat model for the next assistant response and measure latency."""
@@ -41,14 +46,14 @@ class OpenAIService:
         return response.choices[0].message.content or "", latency_ms
 
     async def synthesize_speech(self, text: str) -> bytes:
-        """Convert assistant text into speech bytes for Twilio playback."""
+        """Convert assistant text into browser-playable speech bytes."""
         if not self.client:
             return b""
         response = await self.client.audio.speech.create(
             model="gpt-4o-mini-tts",
             voice=self.settings.openai_tts_voice,
             input=text,
-            response_format="wav",
+            response_format="mp3",
         )
         return response.read()
 
@@ -64,7 +69,7 @@ class OpenAIService:
                 {
                     "role": "system",
                     "content": (
-                        "Summarize the healthcare appointment call as JSON with keys: "
+        "Summarize the healthcare appointment voice session as JSON with keys: "
                         "summary, outcome, sentiment, appointment_update. Outcome must be one of "
                         "confirmed, rescheduled, cancelled, failed, voicemail, escalated, pending."
                     ),
