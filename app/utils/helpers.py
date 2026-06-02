@@ -18,7 +18,8 @@ def _serialize_value(value):
     if isinstance(value, ObjectId):
         return str(value)
     if isinstance(value, datetime):
-        return value.isoformat()
+        timestamp = value if value.tzinfo else value.replace(tzinfo=timezone.utc)
+        return timestamp.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
     if isinstance(value, list):
         return [_serialize_value(item) for item in value]
     if isinstance(value, dict):
