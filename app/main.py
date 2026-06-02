@@ -36,8 +36,20 @@ app.include_router(appointments.router)
 app.include_router(dashboard.router)
 app.include_router(session_stream.router)
 
+app.include_router(auth.router, prefix="/api")
+app.include_router(sessions.router, prefix="/api")
+app.include_router(appointments.router, prefix="/api")
+app.include_router(dashboard.router, prefix="/api")
+app.include_router(session_stream.router, prefix="/api")
+
 
 @app.get("/health")
 async def health():
     """Small health check used by humans, monitors, or deployment platforms."""
+    return {"status": "ok", "service": settings.app_name}
+
+
+@app.get("/api/health")
+async def api_health():
+    """Health check for deployments that route API traffic through /api."""
     return {"status": "ok", "service": settings.app_name}
