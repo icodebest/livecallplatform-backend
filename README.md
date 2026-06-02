@@ -60,7 +60,7 @@ Browser microphone segment
   -> Browser audio playback
 ```
 
-![Modular AI flow](docs/images/modular-call-flow.png)
+![Modular AI flow](docs/images/modular-call-flow_01.png)
 
 ## AI Models
 
