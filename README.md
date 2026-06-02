@@ -4,7 +4,7 @@ FastAPI backend for a browser-native healthcare AI voice agent. It manages authe
 
 This branch replaces Twilio phone calling with microphone-based AI voice sessions in the web app.
 
-![Backend architecture](docs/images/backend-architecture.png)
+![Backend architecture](docs/images/backend-architecture_01.png)
 
 ## Real Use Case
 
@@ -45,7 +45,7 @@ Browser microphone
   -> Browser audio playback
 ```
 
-![Realtime AI flow](docs/images/realtime-call-flow.png)
+![Realtime AI flow](docs/images/realtime-call-flow_01.png)
 
 ### Modular AI Pipeline
 
@@ -147,19 +147,3 @@ http://localhost:8000
 - `PATCH /appointments/{id}` updates appointment status or details.
 - `GET /dashboard/stats` returns dashboard metrics.
 - `WS /ws/sessions/{id}/voice` streams browser audio and AI audio events.
-
-## Architecture Image Prompts
-
-Use these prompts to regenerate and replace the existing images in `backend/docs/images`.
-
-### `backend-architecture.png`
-
-Create a clean SaaS architecture diagram for a browser-native healthcare AI voice agent backend. Style: modern flat technical diagram, dark navy background, teal and amber accent colors, crisp labels, no cartoons, no 3D. Show these blocks left to right: React Clinic Dashboard, FastAPI Backend, MongoDB, OpenAI APIs. Under FastAPI show modules: Auth + JWT + Email OTP, Sessions API, Appointments API, Dashboard API, WebSocket Voice Gateway, Summary Service. Show browser microphone audio entering WebSocket Voice Gateway. Split from WebSocket Voice Gateway into two paths: OpenAI Realtime API path and Modular STT -> GPT -> TTS path. Show transcripts, summaries, outcomes, latency, duration, and appointment updates stored in MongoDB. Include a small note: 4-hour verified demo trial enforcement on protected routes. Export as 16:9 PNG, readable text, high contrast.
-
-### `realtime-call-flow.png`
-
-Create a clean sequence/flow diagram for the Realtime AI voice path in a browser healthcare appointment assistant. Style: dark SaaS technical diagram, teal highlights, simple arrows. Flow: Browser Microphone -> FastAPI WebSocket Proxy -> OpenAI Realtime API -> FastAPI WebSocket Proxy -> Browser Audio Playback. Add side events: live transcript events, active speaker updates, interruption handling, session completion. Show MongoDB receiving transcript turns and final summary metadata. Label this as "Realtime AI Session Flow". Export as 16:9 PNG with readable labels.
-
-### `modular-call-flow.png`
-
-Create a clean sequence/flow diagram for the Modular AI voice pipeline in a browser healthcare appointment assistant. Style: dark SaaS technical diagram, teal and amber accents, simple arrows. Flow: Browser records short audio segment -> FastAPI WebSocket -> OpenAI Speech-to-Text -> GPT Conversation Model -> OpenAI Text-to-Speech -> Browser Audio Playback. Show MongoDB storing transcript turns, latency metrics, duration, summary, sentiment, outcome, and appointment update. Add note: "Observable STT -> LLM -> TTS pipeline for debugging and analytics." Export as 16:9 PNG with readable labels.
