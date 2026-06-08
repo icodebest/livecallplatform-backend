@@ -1,5 +1,9 @@
 from functools import lru_cache
+from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+BACKEND_DIR = Path(__file__).resolve().parents[2]
 
 
 class Settings(BaseSettings):
@@ -7,7 +11,9 @@ class Settings(BaseSettings):
     app_name: str = "Maya Health Voice"
     environment: str = "development"
     api_base_url: str = "http://localhost:8000"
+    api_root_path: str = "/api"
     frontend_url: str = "http://localhost:5173"
+    frontend_urls: str = ""
     clinic_name: str = "CityCare Clinic"
     default_reschedule_slots: str = "Thursday 11:00 AM, Friday 4:00 PM"
 
@@ -26,7 +32,7 @@ class Settings(BaseSettings):
     smtp_use_tls: bool = True
     email_from: str = ""
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(env_file=(BACKEND_DIR / ".env", ".env"), env_file_encoding="utf-8", extra="ignore")
 
 
 @lru_cache
